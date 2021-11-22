@@ -1,12 +1,14 @@
 import { Container } from '@mui/material';
 import React, {useEffect} from 'react';
 import { connect } from 'react-redux';
-import {itGetProduct, filter} from './redux/actions'
+import {setProduct, setFilter} from './redux/actions'
 import "./App.scss"
 import { Box } from '@mui/system'
 import Card from "./components/Card"
+import { Formik } from 'formik'
+import * as Yup from 'yup'
 
-function App({itGetProduct, category = ["Amazon Launchpad"], filter, filterText, product}) {
+function App({setProduct, setFilter, filterText, product}) {
   useEffect(() => {
     fetch('http://localhost:3001/product')
       .then((response) => {
@@ -17,19 +19,52 @@ function App({itGetProduct, category = ["Amazon Launchpad"], filter, filterText,
            const filterData = data.filter(item => {
              return item.name.toLowerCase().includes(filterText.toLowerCase())
            })
-           itGetProduct(filterData)
+           setProduct(filterData)
          } else {
-           itGetProduct(data)
+           setProduct(data)
          }
       });
-  }, [itGetProduct, filterText]);
+  }, [setProduct, filterText]);
 
+  const filterShema = Yup.object().shape({
+    search: Yup.string().min(3, "Minimal length 3")
+  })
 
   return (
       <div className="App">
           <header className="header">
             <Container>
-              <input className="header-input" placeholder="Search" onInput={(e) => filter(e.target.value)}/>
+            <Formik
+              initialValues={{ search: "" }}
+              validationSchema={filterShema}
+              onSubmit={(values, { setSubmitting }) => {
+                  setFilter(values.search)
+                  setSubmitting(false)
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting,
+                /* and other goodies */
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    name="search"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    className="header-input"
+                  />
+                  <span className="header-input-error">{errors.search && touched.search && errors.search}</span>
+                </form>
+              )}
+            </Formik>
             </Container>
           </header>
           <Container>
@@ -53,8 +88,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  itGetProduct,
-  filter
+  setProduct,
+  setFilter
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

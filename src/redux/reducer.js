@@ -5,10 +5,9 @@ let store = {
 
 export default  function reducer(state = store, action) {
     switch(action.type){
-        case "IS_GET_PRODUCT":
+        case "IS_SET_PRODUCT":
           return {
                 ...state,
-                category: [],
                 product: [...action.payload.product]
             }
         case "FILTER":

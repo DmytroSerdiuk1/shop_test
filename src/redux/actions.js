@@ -1,13 +1,13 @@
-const itGetProduct = (dataProduct) => {
+const setProduct = (dataProduct) => {
     return {
-        type: "IS_GET_PRODUCT",
+        type: "IS_SET_PRODUCT",
         payload: {
             product: dataProduct
         }
     }
 }
 
-const filter = (text) => {
+const setFilter = (text) => {
     return {
         type: "FILTER",
         payload: {
@@ -16,4 +16,4 @@ const filter = (text) => {
     }
 }
 
-export {itGetProduct, filter}
+export {setProduct, setFilter}
