@@ -1,24 +1,16 @@
-import axios from 'axios';
-import { Dispatch } from 'redux';
-import { ActionType, Action } from '../actionTypes';
+import { AnyAction } from 'redux';
+import { ActionType } from '../actionTypes';
+import { IProduct } from '../reducers';
 
-export const getData = () =>  async (dispatch: Dispatch<Action>) => {
-        dispatch({
-            type: ActionType.GET_POST_PRODUCTS_PENDING
-        });
+export const getData = (): AnyAction => ({
+    type: ActionType.GET_POST_PRODUCTS_PENDING
+});
 
-        try {
-            const { data } = await axios.get(`http://localhost:3001/product`);
+export const getDataSeccuss = (items: IProduct): AnyAction => ({
+    type: ActionType.GET_POST_PRODUCTS_SUCCESS,
+    payload: items
+})
 
-            dispatch({
-                type: ActionType.GET_POST_PRODUCTS_SUCCESS,
-                payload: data  
-            });
-
-        } catch(err) {
-            dispatch({
-                type: ActionType.GET_POST_PRODUCTS_FAIL,
-            });
-        }
-    }
-
+export const getDataFailed = (): AnyAction => ({
+    type: ActionType.GET_POST_PRODUCTS_SUCCESS,
+})
