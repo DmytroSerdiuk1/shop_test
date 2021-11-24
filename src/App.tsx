@@ -5,16 +5,17 @@ import { useTypedSelector } from './hooks/useTypeSelector';
 import { Formik } from 'formik';
 import { useQueryParams, StringParam } from 'use-query-params';
 import * as Yup from 'yup'
+
 import "./App.scss"
 
 import Card from "./components/Card"
+import { IProduct } from './redux/reducers';
 
 import { Container, FormControl, Box } from '@mui/material';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { IProduct } from './redux/reducers';
 
 const App: React.FC = () => {
   const dispatch = useDispatch();

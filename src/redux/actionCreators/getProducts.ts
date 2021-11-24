@@ -1,12 +1,11 @@
 import { AnyAction } from 'redux';
 import { ActionType } from '../actionTypes';
-import { IProduct } from '../reducers';
 
 export const getData = (): AnyAction => ({
     type: ActionType.GET_POST_PRODUCTS_PENDING
 });
 
-export const getDataSeccuss = (items: IProduct): AnyAction => ({
+export const getDataSeccuss = (items: any): AnyAction => ({
     type: ActionType.GET_POST_PRODUCTS_SUCCESS,
     payload: items
 })

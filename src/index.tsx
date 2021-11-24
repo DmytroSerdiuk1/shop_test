@@ -34,14 +34,14 @@ const RouteAdapter = ({ children }: any ) => {
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-    <BrowserRouter>
-      <QueryParamProvider ReactRouterRoute={RouteAdapter}>
-        <Routes>
-          <Route path="/" element={<App />} />
-        </Routes>
-      </QueryParamProvider>
-    </BrowserRouter>
+      <BrowserRouter>
+        <QueryParamProvider ReactRouterRoute={RouteAdapter}>
+          <Routes>
+            <Route path="/" element={<App />} />
+          </Routes>
+        </QueryParamProvider>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root') 
 );
