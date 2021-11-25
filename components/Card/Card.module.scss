@@ -1,0 +1,15 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &Image {
+        height: 300px;
+        object-fit: contain;
+    }
+
+    &Link {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+}

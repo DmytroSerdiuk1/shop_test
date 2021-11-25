@@ -1,0 +1,38 @@
+.header {
+  padding: 20px 0;
+
+  &Input {
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 15px;
+    border: 2px solid #000;
+    height: 100%;
+    width: 100%;
+
+    &Wrapper {
+      width: 100%;
+    }
+
+    &Error {
+      color: red;
+    }
+  }
+
+  &Form {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    &Button {
+      border: none;
+      background: red;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 200px;
+      height: 50px;
+    }
+  }
+}
