@@ -16,46 +16,48 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import {GetServerSideProps} from "next";
 
 const filterShema = Yup.object().shape({
   searchName: Yup.string().min(3, "The minimum number of characters is 3")
 });
 
-const Home: React.FC = (): JSX.Element => {
+const Home: React.FC = ({alertMessage, alertMessageType}: any): JSX.Element => {
+  console.log(alertMessage, alertMessageType)
   const router = useRouter();
   const dispatch = useDispatch();
   const { products, loading } = useTypedSelector((state) => state.products);
   const [ filterData, setFilterData ] = useState<IProduct[]>([]);
-  const onFilterData = useCallback((values: { searchName: string | string[]; searchTag: string | string[]; }) => {
-      const filterDataByText = products.filter((item) => {
-        return (values.searchName.length ? item.name.toLowerCase().includes(values.searchName.toLowerCase()) : true) && (values.searchTag !== '' ? item.bsr_category === values.searchTag : true);
-      });
-      setFilterData(filterDataByText);
-  }, [products, filterData]);
   const filterCategory = Array.from(new Set(products?.map(item => item?.bsr_category)));
+
   const formik = useFormik({
     initialValues: {
-      searchName:"",
-      searchTag:  "" 
+      searchName: router.query.name || "",
+      searchTag:  router.query.category || ""
     },
     validationSchema: filterShema,
     onSubmit: values => {
-      router.push(`/?category=${router.query.category}&name=${values.searchName}`);
-      formik.setSubmitting(false);
+      const filterDataByText = products.filter((item) => {
+        return (values.searchName.length ? item.name.toLowerCase().includes(values.searchName.toLowerCase()) : true) && (values.searchTag !== '' ? item.bsr_category === values.searchTag : true);
+      });
+      router.push({query: { ...router.query,name: values.searchName}});
+      setFilterData(filterDataByText);
+      console.log(values);
+      formik.setSubmitting(false)
     }
   });
+
   useEffect(() => {
-    if (formik.values.searchTag || formik.values.searchName) {
-      onFilterData({searchName:  formik.values.searchName || "", searchTag: formik.values.searchTag});
+    if(products?.length) {
+      setFilterData(products)
     }
-  }, [formik.values])
-  useEffect(() => {
-    setFilterData(products);
-  }, [products]);
+  }, [products])
 
   useEffect(() => {
     dispatch(getData());
   }, [dispatch]);
+
+
 
   return (
     <div className={styles.container}>
@@ -69,13 +71,13 @@ const Home: React.FC = (): JSX.Element => {
           <form className={styles.headerForm} onSubmit={formik.handleSubmit}>
             <div className={styles.headerInputWrapper}>
               <input
-                autoComplete="off"
-                type="text"
-                name="searchName"
-                onChange={formik.handleChange}
-                value={formik.values.searchName}
-                placeholder="Name"
-                className={styles.headerInput}
+                  autoComplete="off"
+                  type="text"
+                  name="searchName"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.searchName}
+                  className={styles.headerInput}
               />
               <div className={styles.headerInputError}>{
                 formik.errors.searchName && formik.touched.searchName && formik.errors.searchName
@@ -90,7 +92,7 @@ const Home: React.FC = (): JSX.Element => {
                 input={<OutlinedInput label="Name" />}
                 onChange={(e) => {
                   formik.setFieldValue('searchTag', e.target.value);
-                  router.push(`/?category=${e.target.value}&name=${formik.values.searchName}`);
+                  router.push({query: {...router.query, category: e.target.value}});
                 }}
               >
                 <MenuItem value="">All</MenuItem>
@@ -101,7 +103,7 @@ const Home: React.FC = (): JSX.Element => {
                 }
               </Select>
             </FormControl>
-            <button onClick={() => formik.handleSubmit()} className={styles.headerFormButton}>
+            <button onClick={() => formik.handleSubmit()} type="submit" className={styles.headerFormButton}>
               Search
             </button>
           </form>
@@ -118,6 +120,16 @@ const Home: React.FC = (): JSX.Element => {
         </Container>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  return {
+    props: {
+      alertMessage: query.alertMessage || null,
+      alertMessageType: query.alertMessageType || null,
+      one: 1,
+    },
+  };
 };
 
 export default Home;
